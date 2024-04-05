@@ -1,6 +1,6 @@
 ---
 title: "GAE7"
-author: "Your Name Here"
+author: "Hannah Alexander"
 format: 
   html:
     theme: custom.scss
@@ -80,6 +80,130 @@ df1$Block <- factor(df1$Block)
 
 ### Statistical Methods
 
+I ran a linear mixed-effect model for the three organisms of interest, Culex mosquitoes, Hydrophilid beetles, and Dytiscid beetles using the lmer function from the [@lme4] package. Blocks were treated as a random effect. All tables were produced using the [@tidyverse] package.
+
 ## Results
+
+Availability of nutrients, amount of fish, and block had a significant effect on the number of Culex mosquito eggs @tbl-mixedANOVA-Culex, but the interaction between nutrients and fish did not have a statistically significant effect. Similar results were seen with Dytiscid beetles, with the only parameter not having a statistically significant effect being the interaction between nutrients and fish @tbl-mixedANOVA-Dyt. Conversely, the only parameter to have a significant effect on the abundance of Hydrophilid beetles was the effect of the block @tbl-mixedANOVA-Hydro.
+
+```{r}
+#| label: tbl-mixedANOVA-Culex
+#| tbl-cap: "Linear mixed-effect model results for effect of Nutrients, Fish, and spatiotemporal blocks on Culex eggs."
+#| tbl-subcap: 
+#|     - "Fixed effect"
+#|     - "Random effect"
+#| layout-nrows: 2
+
+CulexmodMixed <- lmer(Culex_Egg_Rafts ~ Nutrient*Fish + (1|Block), data = df1)
+
+CulexoutMixed <- anova(CulexmodMixed)
+
+kbl(
+  CulexoutMixed,
+  col.names = c(
+    "SS",
+    "MS",
+    "df1",
+    "df2",
+    "F",
+    "P"
+    ),
+  digits = c(3,3,0,0,3,4)
+  ) |>
+  kable_classic()
+
+kbl(
+  rand(CulexmodMixed),
+  col.names = c(
+    "Parameters",
+    "log-likelihood",
+    "AIC",
+    "LRT",
+    "df",
+    "P"
+    ),
+  digits = c(0,3,3,3,0,4)
+  )
+```
+
+```{r}
+#| label: tbl-mixedANOVA-Hydro
+#| tbl-cap: "Linear mixed-effect model results for effect of Nutrients, Fish, and spatiotemporal blocks on Hydrophilid beetles."
+#| tbl-subcap: 
+#|     - "Fixed effect"
+#|     - "Random effect"
+#| layout-nrows: 2
+
+HydromodMixed <- lmer(Hydrophilidae ~ Nutrient*Fish + (1|Block), data = df1)
+
+HydrooutMixed <- anova(HydromodMixed)
+
+kbl(
+  HydrooutMixed,
+  col.names = c(
+    "SS",
+    "MS",
+    "df1",
+    "df2",
+    "F",
+    "P"
+    ),
+  digits = c(3,3,0,0,3,4)
+  ) |>
+  kable_classic()
+
+kbl(
+  rand(HydromodMixed),
+  col.names = c(
+    "Parameters",
+    "log-likelihood",
+    "AIC",
+    "LRT",
+    "df",
+    "P"
+    ),
+  digits = c(0,3,3,3,0,4)
+  )
+```
+
+```{r}
+#| label: tbl-mixedANOVA-Dyt
+#| tbl-cap: "Linear mixed-effect model results for effect of Nutrients, Fish, and spatiotemporal blocks on Dytiscid beetles."
+#| tbl-subcap: 
+#|     - "Fixed effect"
+#|     - "Random effect"
+#| layout-nrows: 2
+
+DytmodMixed <- lmer(Dytiscidae ~ Nutrient*Fish + (1|Block), data = df1)
+
+DytoutMixed <- anova(DytmodMixed)
+
+kbl(
+  DytoutMixed,
+  col.names = c(
+    "SS",
+    "MS",
+    "df1",
+    "df2",
+    "F",
+    "P"
+    ),
+  digits = c(3,3,0,0,3,4)
+  ) |>
+  kable_classic()
+
+kbl(
+  rand(DytmodMixed),
+  col.names = c(
+    "Parameters",
+    "log-likelihood",
+    "AIC",
+    "LRT",
+    "df",
+    "P"
+    ),
+  digits = c(0,3,3,3,0,4)
+  )
+```
 
 ## References
